@@ -37,27 +37,36 @@ for i=1:size(S,1)*size(S,2)
             Mu{i} = mean(temp);
             temp = temp - repmat(Mu{i}, size(temp,1),1);
         end
-        mm=m;
+        %mm=m;
         if size(temp,1)~=0
-            if size(temp,1)<m
-                mm=size(temp,1);
-            end
-            params.data =temp';
-            params.Tdata = s;
-            params.dictsize = mm;
-            params.iternum = 100;
-            params.memusage = 'normal';
+            %if size(temp,1)<m
+            %    mm=size(temp,1);
+            %end
+            %params.data =temp';
+            %params.Tdata = s;
+            %params.dictsize = mm;
+            %params.iternum = 100;
+            %params.memusage = 'normal';
             % give an initialized dictionary
-            D0 = randn
+            params.K = m;
+            params.L = s;
+            params.numIteration = 10;
+            params.errorFlag=0;
+            params.preserveDCAtom = 0;
+            params.InitializationMethod = 'GivenMatrix';
+            feat_dim = size(temp,2);
+            D0 = randn(feat_dim, m);
+            D0 = normc(D0);
+            params.initialDictionary = D0;
             k=k+1;
             %%%train a dictionary using ksvd
             
-            [Dksvd,Gamma1,err] = ksvd(params,'');
+            [Dksvd] = KSVD(temp',params);
             
             Dict{i}=Dksvd;
-            Gamma{i}=Gamma1;
-            Sigma{i}=err(end);
-            Lamda{i}=numel(Gamma1)/sum(sum(abs(Gamma1)));
+            %Gamma{i}=Gamma1;
+            %Sigma{i}=err(end);
+            %Lamda{i}=numel(Gamma1)/sum(sum(abs(Gamma1)));
         end
     end
 end

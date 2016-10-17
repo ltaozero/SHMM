@@ -38,10 +38,10 @@ for i=1:size(S,1)*size(S,2)
         mm=m;
         % train the dictionary only if there are enough data
         if size(temp,1)~=0
-            if size(temp,1)<m
-                display(' Not enough data to train the dictionary, result might not be accurate');
-                mm=size(temp,1);
-            end
+            %if size(temp,1)<m
+            %    display(' Not enough data to train the dictionary, result might not be accurate');
+            %    mm=size(temp,1);
+            %end
             
             
             %%%Train a dictionary using SPAMS software

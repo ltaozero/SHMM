@@ -33,7 +33,8 @@ for indD=1:length(Dict2)
                 end
            for j=1:nclass %actually only 21 dictionary
               if size(Dict{j},1)~=0
-                 x=omp(Dict{j},temp,Dict{j}'*Dict{j},s); % use OMP to get the sparse representation
+                 %x=omp(Dict{j},temp,Dict{j}'*Dict{j},s); % use OMP to get the sparse representation
+                  x=OMP(Dict{j}, temp,s);
                   rr=temp-Dict{j}*x;
                   r(j,:)=sqrt(sum(rr.*rr));
                   %% calculate the posterior probabiliry 

@@ -41,8 +41,9 @@ for k=1:ntrial;
         lamda(isnan(lamda)|isinf(lamda))=10000;
         temp1 = temp - repmat(Mu{j}',1,size(temp,2));
         if size(Dict{j},1)~=0
+            x=OMP(Dict{j},temp1,s); % use OMP to get the sparse representation
             
-            x=omp(Dict{j},temp1,Dict{j}'*Dict{j},s); % use OMP to get the sparse representation
+            %x=omp(Dict{j},temp1,Dict{j}'*Dict{j},s); % use OMP to get the sparse representation
             rr=temp1-Dict{j}*x;
             r(j,:)=sqrt(sum(rr.*rr));
             

@@ -14,11 +14,11 @@ for j = 1:nclass
 end
 
 % matrix to compute the posterior, used in option 2
-M = cell(1,nclass);
-for j=1:nclass
-    sigma = inv(model.Beta{j}.*model.Dict{j}'*model.Dict{j}+ diag(model.Alpha{j}));
-    M{j} = model.Beta{j}.*sigma * model.Dict{j}';
-end
+%M = cell(1,nclass);
+%for j=1:nclass
+%    sigma = inv(model.Beta{j}.*model.Dict{j}'*model.Dict{j}+ diag(model.Alpha{j}));
+%    M{j} = model.Beta{j}.*sigma * model.Dict{j}';
+%end
 
 data = cell(1,ntrial);
 Trans = cell(1,ntrial);
@@ -47,14 +47,14 @@ for k=1:ntrial;
         if size(model.Dict{j},1)~=0
             % ***************   1. use marginal distribution
             % we use plus because det(Sigma) = 1/ det(inv_Sigma)
-            % pr(j,:) = -0.5*sum(temp1.* (inv_Sigma_o{j}*temp1))+ 0.5* log(det(inv_Sigma_o{j}));
+            pr(j,:) = -0.5*sum(temp1.* (inv_Sigma_o{j}*temp1))+ 0.5* log(det(inv_Sigma_o{j}));
             % ***************   2. use p(o|x)*p(x)
             % first find best x*
-            x = M{j}*temp1;
-            rr=temp1-model.Dict{j}*x;
-            r(j,:)=sqrt(sum(rr.*rr));
-             pr(j,:)=(-sum(rr.^2)*model.Beta{j}/2)+log(model.Beta{j})*(size(temp1,1)/2) ...
-                +(-0.5*sum(model.Alpha{j}* (x.^2)))+0.5*sum(log(model.Alpha{j}));
+            %x = M{j}*temp1;
+            %rr=temp1-model.Dict{j}*x;
+            %r(j,:)=sqrt(sum(rr.*rr));
+            %pr(j,:)=(-sum(rr.^2)*model.Beta{j}/2)+log(model.Beta{j})*(size(temp1,1)/2) ...
+            %    +(-0.5*sum(model.Alpha{j}* (x.^2)))+0.5*sum(log(model.Alpha{j}));
         end
     end
     

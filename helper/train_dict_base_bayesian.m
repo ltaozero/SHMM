@@ -38,10 +38,10 @@ for i=1:size(S,1)*size(S,2)
         mm=m;
         % train the dictionary only if there are enough data
         if size(temp,1)~=0
-            if size(temp,1)<m
-                display(' Not enough data to train the dictionary, result might not be accurate');
-                mm=size(temp,1);
-            end
+            %if size(temp,1)<m
+            %    display(' Not enough data to train the dictionary, result might not be accurate');
+            %    mm=size(temp,1);
+            %end
             
             Mu{i} = zeros(1, size(temp,2));
             if zeromean == 1
@@ -60,7 +60,7 @@ for i=1:size(S,1)*size(S,2)
             end
 
    
-            param.K=mm; param.max_iter =1000;
+            param.K=mm; param.max_iter =2000;
             [D, alpha, beta] = EM_dict_learn(temp, param);
             
             Dict{i}=D;
