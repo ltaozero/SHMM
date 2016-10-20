@@ -86,19 +86,22 @@ fprintf(conf.dict_type)
 switch conf.dict_type
     case 'fix_beta_EM'
 result_filename=(fullfile(globalDir,'Experiments', setuptask,'unBalanced/GestureRecognition',setupname,...
-           sprintf('result_%s_slave%d_dict%d_beta%1.4f_mean%d_itr%d_new.mat',conf.dict_type,slaveonly, conf.dict_size, conf.beta, conf.zeromean, conf.rs)));
+           sprintf('result_%s_slave%d_dict%d_beta%1.4f_mean%d_itr%d',conf.dict_type,slaveonly, conf.dict_size, conf.beta, conf.zeromean, conf.rs)));
     fprintf(result_filename);   
     case 'KSVD'
 result_filename=(fullfile(globalDir,'Experiments', setuptask,'unBalanced/GestureRecognition',setupname,...
-           sprintf('result_%s_slave%d_dict%d_s%d_mean%d_itr%d.mat', conf.dict_type,slaveonly, conf.dict_size, conf.sparsity,conf.zeromean, conf.rs)));
+           sprintf('result_%s_slave%d_dict%d_s%d_mean%d_itr%d', conf.dict_type,slaveonly, conf.dict_size, conf.sparsity,conf.zeromean, conf.rs)));
     fprintf(result_filename);   
     case 'Bayesian'
     result_filename=(fullfile(globalDir,'Experiments', setuptask,'unBalanced/GestureRecognition',setupname,...
-           sprintf('result_%s_slave%d_dict%d_a%1.4f_b%1.4f_mean%d_itr%d.mat', conf.dict_type,slaveonly, conf.dict_size, conf.param.a, conf.param.b,conf.zeromean, conf.rs)));
+           sprintf('result_%s_slave%d_dict%d_a%1.4f_b%1.4f_mean%d_itr%d', conf.dict_type,slaveonly, conf.dict_size, conf.param.a, conf.param.b,conf.zeromean, conf.rs)));
     fprintf(result_filename);   
 end
 
-
+if conf.skip>1
+  result_filename = sprintf('%s_skip%d',result_filename,conf.skip);
+end
+result_filename = result_filename+'.mat';
         
 if (exist('result_filename', 'var'))
     fprintf(['save result to ', result_filename]);
