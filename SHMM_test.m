@@ -93,7 +93,7 @@ for i=1:length(trans_filenames)
     
     %temp(temp==0)=min(min(temp(temp~=0)));
     
-    [path] = viterbi_path_log(model.prior, model.transp, temp);
+    [path] = skip_viterbi(model.prior, model.transp, temp, conf.skip);
     
     path2=zeros(size(trans));
     path2(sum(temp)~=0)=path;

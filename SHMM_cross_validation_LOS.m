@@ -33,14 +33,16 @@ end
 if exist('beta','var')
     conf.beta = beta;
 end
+
 if exist('gamma1','var')
     param.prior='invgamma';
     param.a=gamma1;
     param.b=gamma2;
-    param.c=gamma1;
-    param.d=gamma2;
+    param.c=gamma3;
+    param.d=gamma4;
     conf.param=param;
 end
+conf.skip = skip;
 conf.dict_size = dict_size;
 conf.dict_type = dict_type;
 switch slaveonly

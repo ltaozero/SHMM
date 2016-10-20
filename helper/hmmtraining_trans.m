@@ -1,5 +1,9 @@
 %learning hmm parameter
-function[prior,transp]=hmmtraining_trans(usedidx,trainidx,trans_filenames)
+function[prior,transp]=hmmtraining_trans(usedidx,trainidx,trans_filenames,skip)
+if (~exist('skip','var'))
+  skip=1
+end
+
 
 Trans = cell(1, length(trans_filenames));
 for i = 1 : length(trans_filenames)
@@ -21,10 +25,10 @@ for i=1:length(trainidx)
     trans=Trans{trainidx(i)};
     trans=trans(ismember(trans,usedidx));
     pstart(trans(1))= pstart(trans(1))+1;
-  for j=1:size(trans,2)-1    
+  for j=1:size(trans,2)-skip    
         p(trans(j))=p(trans(j))+1;
-        tranp(trans(j),trans(j+1))=...
-            tranp(trans(j),trans(j+1))+1;
+        tranp(trans(j),trans(j+skip))=...
+            tranp(trans(j),trans(j+skip))+1;
   end
 end
 

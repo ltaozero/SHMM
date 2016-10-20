@@ -91,7 +91,7 @@ switch conf.dict_type
 end
 
 
-[prior,transp]=hmmtraining_trans(conf.usedidx,[1:length(data_filenames)],trans_filenames);
+[prior,transp]=hmmtraining_trans(conf.usedidx,[1:length(data_filenames)],trans_filenames,conf.skip);
 
 %model.Dict = Dict;
 model.prior = prior;
