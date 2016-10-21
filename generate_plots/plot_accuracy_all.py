@@ -29,6 +29,21 @@ beta_set = [0.1,0.5,1,2,5,10]
 
 gamma_set = [0,1,10,100]
 
+
+
+def get_acc(filename):
+    a=sio.loadmat(filename)
+    rate = a['rate'][0]
+    rate1=[]
+    length = []
+    for r in rate:
+        rate1 +=list(r[0])
+    for predictions in a['predicted_labels'][0]:
+        for pred in predictions[0]:
+            length += [pred.shape[1]]
+    acc = np.sum(rate1*np.array(length))/np.sum(length)
+    return acc
+    
 # l1 o-
 # l2 D
 # layer 1 m
@@ -52,13 +67,9 @@ for zeromean in [0,1]:
                                       
             if os.path.isfile(filename):
                 print filename
-                a=sio.loadmat(filename)
-                rate = a['rate'][0]
-                rate1=[]
-                for r in rate:
-                    rate1 +=list(r[0])
-                acc[i] = np.mean(rate1)
+                acc[i] = get_acc(filename)        
         # add plot and legend here
+        print acc
         plt.plot(acc,pattern[idx],linewidth=3,markersize=8, label='{}_modelmean{}'.format(source,zeromean))
         idx +=1
 
@@ -96,13 +107,9 @@ for zeromean in [0,1]:
                                       
             if os.path.isfile(filename):
                 print filename
-                a=sio.loadmat(filename)
-                rate = a['rate'][0]
-                rate1=[]
-                for r in rate:
-                    rate1 +=list(r[0])
-                acc[i] = np.mean(rate1)
+                acc[i] = get_acc(filename)
         # add plot and legend here
+        print acc
         plt.plot(acc,pattern[idx],linewidth=3,markersize=8, label='{}_modelmean{}'.format(source,zeromean))
         idx +=1
 
@@ -138,13 +145,9 @@ for zeromean in [0,1]:
                                       
             if os.path.isfile(filename):
                 print filename
-                a=sio.loadmat(filename)
-                rate = a['rate'][0]
-                rate1=[]
-                for r in rate:
-                    rate1 +=list(r[0])
-                acc[i] = np.mean(rate1)
+                acc[i] = get_acc(filename)
         # add plot and legend here
+        print acc
         plt.plot(acc,pattern[idx],linewidth=3,markersize=8, label='{}_modelmean{}'.format(source,zeromean))
         idx +=1
 

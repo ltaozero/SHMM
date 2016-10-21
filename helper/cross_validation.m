@@ -1,4 +1,4 @@
-function [indS,indL,avgrate,rateall]=cross_validation(usedidx,testidx2,Dict2,s,data_filenames,trans_filenames,data_index,sigma1,lamda1)
+function [indS,indL,avgrate,rateall]=cross_validation(usedidx,testidx_all,model_all,s,data_filenames,trans_filenames,data_index,sigma1,lamda1,skip)
 % MORDIFY HERE
 % Read All Data and Transcripts
 %load(datapath);
@@ -11,11 +11,13 @@ end
 
 rateall=cell(length(sigma1),length(lamda1));
 
-for indD=1:length(Dict2)
-    Dict=Dict2{indD};
-    testidx=testidx2{indD};
-    trainidx=testidx2{3-indD};
-    [prior,transp]=hmmtraining_trans(usedidx,trainidx,trans_filenames);
+for indD=1:length(model_all)
+    model=model_all{indD};
+    Dict = model.Dict;
+    Mu = model.Mu;
+    testidx=testidx_all{indD};
+    trainidx=testidx_all{3-indD};
+    [prior,transp]=hmmtraining_trans(usedidx,trainidx,trans_filenames,skip);
     transp(transp==0)=0.0001;
     for k=1:length(testidx);
          temp=data{testidx(k)}';
@@ -32,6 +34,7 @@ for indD=1:length(Dict2)
                     end
                 end
            for j=1:nclass %actually only 21 dictionary
+              temp1 = temp - repmat(Mu{j}',1,size(temp,2));
               if size(Dict{j},1)~=0
                  %x=omp(Dict{j},temp,Dict{j}'*Dict{j},s); % use OMP to get the sparse representation
                   x=OMP(Dict{j}, temp,s);
@@ -44,7 +47,7 @@ for indD=1:length(Dict2)
                  for indl=1:length(lamda1)
                      sigma=sigma1(inds);lamda=lamda1(indl);
                    pr{inds,indl}(j,:)=(-r(j,:).*r(j,:)/2/sigma/sigma)+log(sigma.^2*2*pi)*(-size(temp,1)/2) ...
-               +(-lamda*sum(abs(x)))+log(lamda./2)*size(Dict{1},2);
+               +(-lamda*sum(abs(x)))+log(lamda./2)*size(Dict{j},2);
                  end
                  end
               end
@@ -59,7 +62,7 @@ for indD=1:length(Dict2)
              temp=temp(:,valididx);
              temp(temp==0)=min(min(temp(temp~=0)));
         
-           [path] = viterbi_path_log(prior, transp, temp);
+           [path] = skip_viterbi(prior, transp, temp,skip);
             path2=zeros(size(trans));
            path2(valididx)=path;
            path2(invalididx)=1;%path2(invalididx+1);

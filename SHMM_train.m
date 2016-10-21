@@ -79,7 +79,7 @@ switch conf.dict_type
         else
             display('Start performing cross validation to get best lambda and sigma');
             [Sigma,Lambda,~]=two_fold_cross_validation(conf.usedidx,[1:length(data_filenames)], ...
-                conf.sparsity,conf.dict_size,0,data_filenames,trans_filenames,conf.data_index,S,trr);
+                conf.sparsity,conf.dict_size,0,data_filenames,trans_filenames,conf.data_index,S,trr,conf.skip,conf.zeromean);
             fprintf('cross validation finished, sigma is %f, lambda is %f', Sigma, Lambda);
         end
         model.Sigma = Sigma;
@@ -87,7 +87,7 @@ switch conf.dict_type
     case 'fix_beta_EM'
         model=train_dict_base_fix_beta(conf.usedidx,[1:length(data_filenames)],conf.beta,conf.dict_size,0,S,trr,1,conf.zeromean);
     case 'Bayesian'
-        model = train_dict_base_bayesian(conf.usedidx,[1:length(data_filenames)],conf.dict_size,0,S,trr,conf.zeromean,conf.param);
+        model = train_dict_base_bayesian_new(conf.usedidx,[1:length(data_filenames)],conf.dict_size,0,S,trr,conf.zeromean,conf.param);
 end
 
 

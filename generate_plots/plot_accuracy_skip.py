@@ -25,7 +25,9 @@ dataset = taskset[dataset_idx]
 
 s_set = [3]
 
-beta_set = [0.5,1,2,5,10]
+beta_set = [0.5]
+
+skip_set = [10,20,40,80,160,320]
 
 #gamma_set = [0,1,10,100]
 
@@ -35,17 +37,16 @@ beta_set = [0.5,1,2,5,10]
 # layer 3 b
 # multiscale .-
 pattern = ['cd-','bd-','md-','c*--','b*--','m*--']
-nword_set = [5,20,40,60,80,100] 
 legend = []
 idx =0
 data_source =['all','slave','14dim']
-for zeromean in [0,1]:    
-    for slaveonly in [0,1,2]:
+for zeromean in [1]:    
+    for slaveonly in [1]:
         source = data_source[slaveonly]
-        acc = np.zeros(len(s_set))
-            
-        for i,s in enumerate(s_set):
-            fname ='result_{}_slave{}_dict{}_s{}_mean{}_itr{}.mat'.format('KSVD',slaveonly, 200, s, zeromean, 1)
+        acc = np.zeros(len(skip_set))
+        s=3    
+        for i,skip in enumerate(skip_set):
+            fname ='result_{}_slave{}_dict{}_s{}_mean{}_itr{}_skip{}.mat'.format('KSVD',slaveonly, 200, s, zeromean, 1,skip)
 
             filename=globalDir+'/Experiments/'+ dataset+'/unBalanced/GestureRecognition/'+setupname+'/'+fname
 
@@ -66,30 +67,29 @@ for zeromean in [0,1]:
 ax = plt.gca()
 
 #ax.set_ylim(ylim)
-plt.xlabel('sparsity level',fontsize=18)
+plt.xlabel('skip length',fontsize=18)
 plt.ylabel('accuracy',fontsize=18)
-plt.xticks(range(5),['3','5','7','9','11'])
+plt.xticks(range(6),['10','20','40','80','160','320'])
 plt.legend(loc='lower right')
-plt.title('{}_{}_KSVD_performance.png'.format(dataset,setupname))
+plt.title('{}_{}_KSVD_skip_length.png'.format(dataset,setupname))
 #plt.title('Performance on {}'.format(dataset),fontsize=24)
 #plt.title('{}_accuracy_for_different_dictsize_l1{}_layer{}'.format(dataset,nword,layer))
 #os.mkdir('/home-3/ltao4@jhu.edu/scratch/mp_journal/plots/{}'.format(dataset))
-plt.savefig('/home-3/ltao4@jhu.edu/scratch/shmm/plots/{}_{}_KSVD_performance.png'.format(dataset,setupname))       
+plt.savefig('/home-3/ltao4@jhu.edu/scratch/shmm/plots/{}_{}_KSVD_skip_length.png'.format(dataset,setupname))       
 
 #plot fix_beta_EM
 plt.figure()
 pattern = ['cd-','bd-','md-','c*--','b*--','m*--']
-nword_set = [5,20,40,60,80,100] 
 legend = []
 idx =0
 data_source =['all','slave','14dim']
-for zeromean in [0,1]:    
-    for slaveonly in [0,1,2]:
+for zeromean in [1]:    
+    for slaveonly in [1]:
         source = data_source[slaveonly]
-        acc = np.zeros(len(beta_set))
-            
-        for i,beta in enumerate(beta_set):
-            fname ='result_{}_slave{}_dict{}_beta{:6.4f}_mean{}_itr{}_new.mat'.format('fix_beta_EM',slaveonly, 200, beta, zeromean, 1)
+        acc = np.zeros(len(skip_set))
+        beta=0.5    
+        for i,skip in enumerate(skip_set):
+            fname ='result_{}_slave{}_dict{}_beta{:6.4f}_mean{}_itr{}_skip{}.mat'.format('fix_beta_EM',slaveonly, 200, beta, zeromean, 1,skip)
 
             filename=globalDir+'/Experiments/'+ dataset+'/unBalanced/GestureRecognition/'+setupname+'/'+fname
 
@@ -110,55 +110,12 @@ for zeromean in [0,1]:
 ax = plt.gca()
 
 #ax.set_ylim(ylim)
-plt.xlabel('regularizer weight',fontsize=18)
+plt.xlabel('skip_length',fontsize=18)
 plt.ylabel('accuracy',fontsize=18)
-plt.xticks(range(6),['0.1','0.5','1','2','5','10'])
+plt.xticks(range(6),['10','20','40','80','160','320'])
 plt.legend(loc='lower right')
-plt.title('{}_{}_fixBeta_performance'.format(dataset,setupname))
+plt.title('{}_{}_fixBeta_skip_length'.format(dataset,setupname))
 #plt.title('{}_accuracy_for_different_dictsize_l1{}_layer{}'.format(dataset,nword,layer))
 #os.mkdir('/home-3/ltao4@jhu.edu/scratch/mp_journal/plots/{}'.format(dataset))
-plt.savefig('/home-3/ltao4@jhu.edu/scratch/shmm/plots/{}_{}_fixBeta_performance.png'.format(dataset,setupname))       
-
-plt.figure()
-pattern = ['cd-','bd-','md-','c*--','b*--','m*--']
-nword_set = [5,20,40,60,80,100] 
-legend = []
-idx =0
-data_source =['all','slave','14dim']
-for zeromean in [0,1]:    
-    for slaveonly in [0,1,2]:
-        source = data_source[slaveonly]
-        acc = np.zeros(len(gamma_set))
-            
-        for i,gamma in enumerate(gamma_set):
-            fname ='result_{}_slave{}_dict{}_gamma{:6.4f}_mean{}_itr{}.mat'.format('Bayesian',slaveonly, 200, gamma, zeromean, 1)
-
-            filename=globalDir+'/Experiments/'+ dataset+'/unBalanced/GestureRecognition/'+setupname+'/'+fname
-
-                                      
-            if os.path.isfile(filename):
-                print filename
-                a=sio.loadmat(filename)
-                rate = a['rate'][0]
-                rate1=[]
-                for r in rate:
-                    rate1 +=list(r[0])
-                acc[i] = np.mean(rate1)
-        # add plot and legend here
-        plt.plot(acc,pattern[idx],linewidth=3,markersize=8, label='{}_modelmean{}'.format(source,zeromean))
-        idx +=1
-
-
-ax = plt.gca()
-
-#ax.set_ylim(ylim)
-plt.xlabel('gamma',fontsize=18)
-plt.ylabel('accuracy',fontsize=18)
-plt.xticks(range(4),['0','1','10','100'])
-plt.legend(loc='lower right')
-plt.title('{}_{}_bayesian_performance'.format(dataset,setupname))
-#plt.title('{}_accuracy_for_different_dictsize_l1{}_layer{}'.format(dataset,nword,layer))
-#os.mkdir('/home-3/ltao4@jhu.edu/scratch/mp_journal/plots/{}'.format(dataset))
-plt.savefig('/home-3/ltao4@jhu.edu/scratch/shmm/plots/{}_{}_bayesian_performance.png'.format(dataset,setupname))       
-
+plt.savefig('/home-3/ltao4@jhu.edu/scratch/shmm/plots/{}_{}_fixBeta_skip_length.png'.format(dataset,setupname))       
 

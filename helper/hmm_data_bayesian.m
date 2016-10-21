@@ -10,7 +10,7 @@ end
 
 % Compute Sigma_o for each class j, used in option 1
 for j = 1:nclass
-    inv_Sigma_o{j} = inv(model.Dict{j}*diag(1./model.Alpha{j})*model.Dict{j}' + 1/model.Beta{j}.*eye(size(model.Dict{j},1)));
+    inv_Sigma_o{j} = inv((1./model.Alpha)*model.Dict{j}*model.Dict{j}' + 1/model.Beta.*eye(size(model.Dict{j},1)));
 end
 
 % matrix to compute the posterior, used in option 2

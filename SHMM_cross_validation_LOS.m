@@ -63,7 +63,7 @@ conf.rs = rs;
 conf.datapath = [globalDir,'/data/' setuptask '/california76/AllGestures_norm/'];
 conf.transpath = [globalDir,'/data/' setuptask '/transcriptions_final/'];
 conf.usedidx = surgemes_set{task_index};
-conf.cross_valid = 0;
+conf.cross_valid = 1;
 conf.zeromean = zeromean;
 if conf.cross_valid ==0
     conf.default_sigma = 2.0;
@@ -80,6 +80,9 @@ for test_number = 1 : ntests
             
             model{test_number} = SHMM_train(trainfilename, conf);
             [predicted_labels{test_number}, rate{test_number}, ratebasic{test_number}] = SHMM_test(testfilename, conf, model{test_number});           
+            
+            cell2mat(rate)
+
 end
 
 fprintf(conf.dict_type)
@@ -101,7 +104,7 @@ end
 if conf.skip>1
   result_filename = sprintf('%s_skip%d',result_filename,conf.skip);
 end
-result_filename = result_filename+'.mat';
+result_filename = strcat(result_filename,'.mat');
         
 if (exist('result_filename', 'var'))
     fprintf(['save result to ', result_filename]);

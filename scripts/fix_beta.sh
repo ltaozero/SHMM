@@ -2,7 +2,7 @@
 
 #SBATCH
 #SBATCH --partition=shared
-#SBATCH -t 10:00:00
+#SBATCH -t 3:00:00
 #SBATCH --nodes=1
 #SBATCh --mem=8g
 #SBATCh --job-name=fixBeta
