@@ -53,7 +53,10 @@ for k=1:ntrial;
             
             rr=temp1-Dict{j}*x;
             r(j,:)=sqrt(sum(rr.*rr));
-            
+            %mean(rr)
+            %meanrr = sum(sum(rr.^2))/numel(rr)
+            %meanx = sum(sum(abs(x)))/numel(x)
+            %meanxx = sum(sum(x.^2))/numel(x)
             
             pr(j,:)=(-r(j,:).*r(j,:)/2/sigma)+log(sigma*2*pi)*(-size(temp1,1)/2) ...
                 +(-lambda*sum(abs(x)))+log(lambda./2)*size(Dict{j},2);

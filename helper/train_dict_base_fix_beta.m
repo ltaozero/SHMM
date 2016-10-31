@@ -55,6 +55,12 @@ for i=1:size(S,1)*size(S,2)
             
             Dict{i}=D;
             alpha=mexLasso(temp',D,param);
+            %meanx = sum(sum(abs(alpha)))/numel(alpha)
+            %meanxx = sum(sum(alpha.^2))/numel(alpha)
+            %e = temp'-D*alpha;
+            %meanee = sum(sum(e.^2))/numel(e)
+
+
             fobj = 0.5*sum(sum((temp'-D*alpha).^2))+beta*sum(sum(abs(alpha)));
             fobj_total=fobj_total+ fobj;
             Ntotal=Ntotal+size(temp,1);

@@ -27,7 +27,7 @@ s_set = [3,5,7,9,11]
 
 beta_set = [0.1,0.5,1,2,5,10]
 
-gamma_set = [0,1,10,100]
+b_set = [1,10,100,1e3,1e4,1e5,1e6,1e7]
 
 
 
@@ -49,13 +49,12 @@ def get_acc(filename):
 # layer 1 m
 # layer 3 b
 # multiscale .-
-pattern = ['cd-','bd-','md-','c*--','b*--','m*--']
-nword_set = [5,20,40,60,80,100] 
+pattern = ['cd-','bd-','c*--','b*--']
 legend = []
 idx =0
 data_source =['all','slave','14dim']
 for zeromean in [0,1]:    
-    for slaveonly in [0,1,2]:
+    for slaveonly in [0,1]:
         source = data_source[slaveonly]
         acc = np.zeros(len(s_set))
             
@@ -70,7 +69,10 @@ for zeromean in [0,1]:
                 acc[i] = get_acc(filename)        
         # add plot and legend here
         print acc
-        plt.plot(acc,pattern[idx],linewidth=3,markersize=8, label='{}_modelmean{}'.format(source,zeromean))
+        labelstr = source
+        if zeromean:
+            labelstr += '_modelmean'
+        plt.plot(acc,pattern[idx],linewidth=3,markersize=8, label=labelstr)
         idx +=1
 
 
@@ -81,7 +83,7 @@ plt.xlabel('sparsity level',fontsize=18)
 plt.ylabel('accuracy',fontsize=18)
 plt.xticks(range(5),['3','5','7','9','11'])
 plt.legend(loc='lower right')
-plt.title('{}_{}_KSVD_performance.png'.format(dataset,setupname))
+plt.title('{}_{}: SHMM-KSVD performance'.format(dataset,setupname))
 #plt.title('Performance on {}'.format(dataset),fontsize=24)
 #plt.title('{}_accuracy_for_different_dictsize_l1{}_layer{}'.format(dataset,nword,layer))
 #os.mkdir('/home-3/ltao4@jhu.edu/scratch/mp_journal/plots/{}'.format(dataset))
@@ -89,13 +91,11 @@ plt.savefig('/home-3/ltao4@jhu.edu/scratch/shmm/plots/{}_{}_KSVD_performance.png
 
 #plot fix_beta_EM
 plt.figure()
-pattern = ['cd-','bd-','md-','c*--','b*--','m*--']
-nword_set = [5,20,40,60,80,100] 
 legend = []
 idx =0
 data_source =['all','slave','14dim']
 for zeromean in [0,1]:    
-    for slaveonly in [0,1,2]:
+    for slaveonly in [0,1]:
         source = data_source[slaveonly]
         acc = np.zeros(len(beta_set))
             
@@ -110,7 +110,10 @@ for zeromean in [0,1]:
                 acc[i] = get_acc(filename)
         # add plot and legend here
         print acc
-        plt.plot(acc,pattern[idx],linewidth=3,markersize=8, label='{}_modelmean{}'.format(source,zeromean))
+        labelstr=source
+        if zeromean:
+            labelstr += '_modelmean'
+        plt.plot(acc,pattern[idx],linewidth=3,markersize=8, label=labelstr)
         idx +=1
 
 
@@ -121,24 +124,22 @@ plt.xlabel('regularizer weight',fontsize=18)
 plt.ylabel('accuracy',fontsize=18)
 plt.xticks(range(6),['0.1','0.5','1','2','5','10'])
 plt.legend(loc='lower right')
-plt.title('{}_{}_fixBeta_performance'.format(dataset,setupname))
+plt.title('{}_{}: SHMM-AEM performance'.format(dataset,setupname))
 #plt.title('{}_accuracy_for_different_dictsize_l1{}_layer{}'.format(dataset,nword,layer))
 #os.mkdir('/home-3/ltao4@jhu.edu/scratch/mp_journal/plots/{}'.format(dataset))
 plt.savefig('/home-3/ltao4@jhu.edu/scratch/shmm/plots/{}_{}_fixBeta_performance.png'.format(dataset,setupname))       
 
 plt.figure()
-pattern = ['cd-','bd-','md-','c*--','b*--','m*--']
-nword_set = [5,20,40,60,80,100] 
 legend = []
 idx =0
 data_source =['all','slave','14dim']
 for zeromean in [0,1]:    
-    for slaveonly in [0,1,2]:
+    for slaveonly in [0,1]:
         source = data_source[slaveonly]
-        acc = np.zeros(len(gamma_set))
+        acc = np.zeros(len(b_set))
             
-        for i,gamma in enumerate(gamma_set):
-            fname ='result_{}_slave{}_dict{}_gamma{:6.4f}_mean{}_itr{}.mat'.format('Bayesian',slaveonly, 200, gamma, zeromean, 1)
+        for i,b in enumerate(b_set):
+            fname ='result_{}_slave{}_dict{}_a{:6.4f}_b{:6.4f}_mean{}_itr{}.mat'.format('Bayesian',slaveonly, 200, 10*b,b, zeromean, 1)
 
             filename=globalDir+'/Experiments/'+ dataset+'/unBalanced/GestureRecognition/'+setupname+'/'+fname
 
@@ -147,19 +148,21 @@ for zeromean in [0,1]:
                 print filename
                 acc[i] = get_acc(filename)
         # add plot and legend here
-        print acc
-        plt.plot(acc,pattern[idx],linewidth=3,markersize=8, label='{}_modelmean{}'.format(source,zeromean))
+        labelstr=source
+        if zeromean:
+            labelstr += '_modelmean'
+        plt.plot(acc,pattern[idx],linewidth=3,markersize=8, label=labelstr)
         idx +=1
 
 
 ax = plt.gca()
 
 #ax.set_ylim(ylim)
-plt.xlabel('gamma',fontsize=18)
+plt.xlabel('b',fontsize=18)
 plt.ylabel('accuracy',fontsize=18)
-plt.xticks(range(4),['0','1','10','100'])
+plt.xticks(range(8),['1','10','1e2','1e3','1e4','1e5','1e6','1e7'])
 plt.legend(loc='lower right')
-plt.title('{}_{}_bayesian_performance'.format(dataset,setupname))
+plt.title('{}_{}: BSHMM performance'.format(dataset,setupname))
 #plt.title('{}_accuracy_for_different_dictsize_l1{}_layer{}'.format(dataset,nword,layer))
 #os.mkdir('/home-3/ltao4@jhu.edu/scratch/mp_journal/plots/{}'.format(dataset))
 plt.savefig('/home-3/ltao4@jhu.edu/scratch/shmm/plots/{}_{}_bayesian_performance.png'.format(dataset,setupname))       

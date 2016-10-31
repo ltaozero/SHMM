@@ -9,8 +9,8 @@ trainidx2=trainidx(2:2:end);
 [model1]=train_dict_base_new(usedidx,trainidx1,s,m,flagskill,S,trr,zeromean);
 [model2]=train_dict_base_new(usedidx,trainidx2,s,m,flagskill,S,trr,zeromean);
 %%% move to the parameter estimation function
-sigma1=[1e-3,1e-2,1e-1,1,10];
-lamda1=[1e-2,1e-1,1,10,20];
+sigma1=[1e-3,1e-2,1e-1,1,2,10];
+lamda1=[1e-2,1e-1,1,2,10];
 testidx_all{1}=trainidx2;
 testidx_all{2}=trainidx1;
 

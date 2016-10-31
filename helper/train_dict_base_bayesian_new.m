@@ -74,7 +74,7 @@ end
 %initialization
 param.K=mm; param.max_iter =2000;
 alpha = (N_total*param.K+2*param.a)/(S_total+2*param.b);
-beta = (N_total*D + 2*param.c)/(Q_total+2*param.b);
+beta = (N_total*D + 2*param.c)/(Q_total+2*param.d);
 display(alpha)
 display(beta)
 %initialization
@@ -106,6 +106,9 @@ for iter = 1: param.max_iter
     Q_total =Q_total+Q;    
   end
   % update beta and alpha for all class
+  S_total
+  Q_total
+  N_total
   alpha = (param.K*N_total + 2*param.a)/(S_total+2*param.b)
   beta = (D*N_total+2*param.c) /(Q_total+2*param.d)
 
