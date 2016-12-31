@@ -42,18 +42,7 @@ if (~exist(testfilename,'file'))
     error('TestFile does not exist!');
 end
 
-data_filenames = [];
-trans_filenames = [];
-fid = fopen(testfilename);
-tline = fgetl(fid);
-while ischar(tline)
-    b = strread(tline,'%s');
-    data_filenames = [data_filenames,{fullfile(conf.datapath, [b{2}])}];
-    trans_filenames = [trans_filenames,{fullfile(conf.transpath, [b{2}])}];
-    tline = fgetl(fid);
-end
-fclose(fid);
-
+[data_filenames, trans_filenames] = get_filenames(testfilename, conf);
 % Load transcriptions
 ntrial = length(trans_filenames);
 if (length(trans_filenames)~=ntrial)

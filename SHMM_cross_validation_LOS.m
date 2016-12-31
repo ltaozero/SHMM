@@ -18,12 +18,12 @@ addpath /home-3/ltao4@jhu.edu/toolbox/ksvd
 run('/home-3/ltao4@jhu.edu/toolbox/spams-matlab/start_spams.m')
 
 % cross_validation parameters
-taskset = {'Suturing', 'Knot_Tying','Needle_Passing'};
+taskset = {'Suturing', 'Knot_Tying','Needle_Passing','50Salads_eval','50Salads_mid'};
 setupset = {'UserOut', 'SuperTrialOut'};
 ntest_set = [8,5];
 % Note: change the used surgeme in Needle passing from [1:6,8:11], to
 % [1:6,8,11].
-surgemes_set = { [1:6,8:11],[1,11:15],[1:6,8,11]};
+surgemes_set = { [1:6,8:11],[1,11:15],[1:6,8,11],};
 setuptask = taskset{task_index};
 setupname = setupset{setup_index};
 ntests = ntest_set(setup_index);

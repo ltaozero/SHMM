@@ -51,19 +51,8 @@ if (~exist(trainfilename,'file'))
     error('TrainFile does not exist!');
 end
 
-data_filenames = [];
-trans_filenames = [];
-fid = fopen(trainfilename);
-tline = fgetl(fid);
-while ischar(tline)
-    b = strread(tline,'%s');
-    data_filenames = [data_filenames,{fullfile(conf.datapath, [b{2}])}];
-    trans_filenames = [trans_filenames,{fullfile(conf.transpath, [b{2}])}];
-    tline = fgetl(fid);
-end
-fclose(fid);
-
 %generate surgeme data
+[data_filenames, trans_filenames] = get_filenames(trainfilename,conf);
 [S,trr]=generate_surgemedata(data_filenames,trans_filenames,conf.usedidx, conf.data_index, ones(1,length(trans_filenames)));
 
 switch conf.dict_type
