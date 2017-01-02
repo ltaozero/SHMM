@@ -51,14 +51,16 @@ if (~exist(trainfilename,'file'))
     error('TrainFile does not exist!');
 end
 
+usedidx = conf.data_params.usedidx;
+data_index = conf.data_params.data_index;
 %generate surgeme data
 [data_filenames, trans_filenames] = get_filenames(trainfilename,conf);
-[S,trr]=generate_surgemedata(data_filenames,trans_filenames,conf.usedidx, conf.data_index, ones(1,length(trans_filenames)));
+[S,trr]=generate_surgemedata(data_filenames,trans_filenames,usedidx, data_index, ones(1,length(trans_filenames)));
 
 switch conf.dict_type
     case 'KSVD'
         %%%%%%%%%%%%% train dictionary using KSVD
-        model = train_dict_base_new(conf.usedidx,[1:length(data_filenames)],conf.sparsity,conf.dict_size,0,S,trr,conf.zeromean);
+        model = train_dict_base_new(usedidx,[1:length(data_filenames)],conf.sparsity,conf.dict_size,0,S,trr,conf.zeromean);
         model.sparsity = conf.sparsity;
         % Get Sigma and Lambda
         % cross-validation to find good Sigma and Lambda
@@ -67,20 +69,20 @@ switch conf.dict_type
             Lambda = conf.default_lambda;
         else
             display('Start performing cross validation to get best lambda and sigma');
-            [Sigma,Lambda,~]=two_fold_cross_validation(conf.usedidx,[1:length(data_filenames)], ...
-                conf.sparsity,conf.dict_size,0,data_filenames,trans_filenames,conf.data_index,S,trr,conf.skip,conf.zeromean);
+            [Sigma,Lambda,~]=two_fold_cross_validation(usedidx,[1:length(data_filenames)], ...
+                conf.sparsity,conf.dict_size,0,data_filenames,trans_filenames,conf.data_params.data_index,S,trr,conf.skip,conf.zeromean);
             fprintf('cross validation finished, sigma is %f, lambda is %f', Sigma, Lambda);
         end
         model.Sigma = Sigma;
         model.Lambda = Lambda;
     case 'fix_beta_EM'
-        model=train_dict_base_fix_beta(conf.usedidx,[1:length(data_filenames)],conf.beta,conf.dict_size,0,S,trr,1,conf.zeromean);
+        model=train_dict_base_fix_beta(usedidx,[1:length(data_filenames)],conf.beta,conf.dict_size,0,S,trr,1,conf.zeromean);
     case 'Bayesian'
-        model = train_dict_base_bayesian_new(conf.usedidx,[1:length(data_filenames)],conf.dict_size,0,S,trr,conf.zeromean,conf.param);
+        model = train_dict_base_bayesian_new(usedidx,[1:length(data_filenames)],conf.dict_size,0,S,trr,conf.zeromean,conf.param);
 end
 
 
-[prior,transp]=hmmtraining_trans(conf.usedidx,[1:length(data_filenames)],trans_filenames,conf.skip);
+[prior,transp]=hmmtraining_trans(usedidx,[1:length(data_filenames)],trans_filenames,conf.skip);
 
 %model.Dict = Dict;
 model.prior = prior;

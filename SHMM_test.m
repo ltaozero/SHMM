@@ -42,6 +42,9 @@ if (~exist(testfilename,'file'))
     error('TestFile does not exist!');
 end
 
+
+usedidx = conf.data_params.usedidx;
+data_index = conf.data_params.data_index;
 [data_filenames, trans_filenames] = get_filenames(testfilename, conf);
 % Load transcriptions
 ntrial = length(trans_filenames);
@@ -50,23 +53,23 @@ if (length(trans_filenames)~=ntrial)
 end
 Trans = cell(1,ntrial);
 for i = 1 : ntrial
-    [~, Trans{i}] = read_data_and_trans(data_filenames{i}, trans_filenames{i}, conf.data_index);
+    [~, Trans{i}] = read_data_and_trans(data_filenames{i}, trans_filenames{i}, data_index);
 end
 
 switch model.dict_type
     case 'KSVD'
         % predict labels of test data
         [~,prall,ratebasic,~,~]=...
-            hmm_data_l1_log(conf.usedidx,model,data_filenames,...
-            trans_filenames,conf.data_index);
+            hmm_data_l1_log(usedidx,model,data_filenames,...
+            trans_filenames,data_index);
     case 'fix_beta_EM'
         [~,prall,ratebasic,~,~]=...
-            hmm_data_l1_real_log(conf.usedidx,model,data_filenames,...
-            trans_filenames,conf.data_index);
+            hmm_data_l1_real_log(usedidx,model,data_filenames,...
+            trans_filenames,data_index);
     case 'Bayesian'
         [prall,ratebasic,~,~]=...
-            hmm_data_bayesian(conf.usedidx,model,data_filenames,...
-            trans_filenames,conf.data_index);
+            hmm_data_bayesian(usedidx,model,data_filenames,...
+            trans_filenames,data_index);
 end
 
 
@@ -87,9 +90,9 @@ for i=1:length(trans_filenames)
     path2=zeros(size(trans));
     path2(sum(temp)~=0)=path;
     path2(sum(temp)==0)=1;
-    predicted_labels{i}=conf.usedidx(path2);
-    select_idx = find(ismember(trans,conf.usedidx));
-    rate(i)=sum(conf.usedidx(path2(select_idx))==trans(select_idx))./length(select_idx);
+    predicted_labels{i}=usedidx(path2);
+    select_idx = find(ismember(trans,usedidx));
+    rate(i)=sum(usedidx(path2(select_idx))==trans(select_idx))./length(select_idx);
 end
 
 % if (exist(result_filename, 'var'))
