@@ -3,6 +3,7 @@
 % slaveonly, rs,zeromean, skip
 %globalDir = '/cis/home/ltao/lab/Data/California76/';
 globalDir = '/scratch/groups/rvidal1/Data/';
+conf.globalDir = globalDir;
 %  task_index = 1;
 %  setup_index = 1;
 
@@ -55,8 +56,8 @@ for test_number = 1 : ntests
             fprintf(['Test number ', num2str(test_number) '\n']);
             trainfilename = sprintf(conf.data_params.trainfilename_str, test_number);
             testfilename = sprintf(conf.data_params.testfilename_str, test_number);
-            model{test_number} = SHMM_train(trainfilename, conf);
-            [predicted_labels{test_number}, rate{test_number}, ratebasic{test_number}] = SHMM_test(testfilename, conf, model{test_number});           
+            model{test_number} = SHMM_train(trainfilename, conf,test_number);
+            [predicted_labels{test_number}, rate{test_number}, ratebasic{test_number}] = SHMM_test(testfilename, conf, model{test_number},test_number);           
             
             cell2mat(rate)
 

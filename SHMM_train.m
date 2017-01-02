@@ -1,4 +1,4 @@
-function model = SHMM_train(trainfilename, conf)
+function model = SHMM_train(trainfilename, conf,split)
 % ********************************************************
 % Input:
 %
@@ -54,12 +54,15 @@ end
 usedidx = conf.data_params.usedidx;
 data_index = conf.data_params.data_index;
 %generate surgeme data
-[data_filenames, trans_filenames] = get_filenames(trainfilename,conf);
+disp('get filenames');
+[data_filenames, trans_filenames] = get_filenames(trainfilename,conf,split);
+disp('get data');
 [S,trr]=generate_surgemedata(data_filenames,trans_filenames,usedidx, data_index, ones(1,length(trans_filenames)));
 
 switch conf.dict_type
     case 'KSVD'
         %%%%%%%%%%%%% train dictionary using KSVD
+        disp('KSVD mode');
         model = train_dict_base_new(usedidx,[1:length(data_filenames)],conf.sparsity,conf.dict_size,0,S,trr,conf.zeromean);
         model.sparsity = conf.sparsity;
         % Get Sigma and Lambda
@@ -76,8 +79,10 @@ switch conf.dict_type
         model.Sigma = Sigma;
         model.Lambda = Lambda;
     case 'fix_beta_EM'
+        disp('aEM mode');
         model=train_dict_base_fix_beta(usedidx,[1:length(data_filenames)],conf.beta,conf.dict_size,0,S,trr,1,conf.zeromean);
     case 'Bayesian'
+        disp('Bayesian mode');
         model = train_dict_base_bayesian_new(usedidx,[1:length(data_filenames)],conf.dict_size,0,S,trr,conf.zeromean,conf.param);
 end
 

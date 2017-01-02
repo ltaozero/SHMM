@@ -60,7 +60,7 @@ for i=1:size(S,1)*size(S,2)
             params.initialDictionary = D0;
             k=k+1;
             %%%train a dictionary using ksvd
-            
+            disp('KSVD learning start!') 
             [Dksvd] = KSVD(temp',params);
             
             Dict{i}=Dksvd;

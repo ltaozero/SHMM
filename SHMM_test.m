@@ -1,4 +1,4 @@
-function [predicted_labels, rate, ratebasic] = SHMM_test(testfilename, conf, model, result_filename)
+function [predicted_labels, rate, ratebasic] = SHMM_test(testfilename, conf, model, result_filename,split)
 % ********************************************************
 % Input:
 %
@@ -45,7 +45,7 @@ end
 
 usedidx = conf.data_params.usedidx;
 data_index = conf.data_params.data_index;
-[data_filenames, trans_filenames] = get_filenames(testfilename, conf);
+[data_filenames, trans_filenames] = get_filenames(testfilename, conf,split);
 % Load transcriptions
 ntrial = length(trans_filenames);
 if (length(trans_filenames)~=ntrial)

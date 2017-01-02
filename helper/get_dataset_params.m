@@ -1,12 +1,16 @@
 function data_params = get_dataset_params(task_index, setup_index, conf)
+    globalDir = conf.globalDir;
+    slaveonly = conf.slaveonly;
     taskset = {'Suturing', 'Knot_Tying','Needle_Passing','50Salads_eval','50Salads_mid'};
     setupset = {'UserOut', 'SuperTrialOut'};
     ntest_set = [8,5];
     % Note: change the used surgeme in Needle passing from [1:6,8:11], to
     % [1:6,8,11].
-    surgemes_set = { [1:6,8:11],[1,11:15],[1:6,8,11],[0:9],[0:17]};
-    data_params.setuptask = taskset{task_index};
-    data_params.setupname = setupset{setup_index};
+    surgemes_set = { [1:6,8:11],[1,11:15],[1:6,8,11],[1:9,18],[1:17,18]};
+    setuptask = taskset{task_index};
+    setupname = setupset{setup_index};
+    data_params.setuptask = setuptask;
+    data_params.setupname = setupname;
     data_params.ntests = ntest_set(setup_index);
     data_params.usedidx = surgemes_set{task_index};
     if task_index >3
@@ -29,17 +33,17 @@ function data_params = get_dataset_params(task_index, setup_index, conf)
     if task_index <=3
         data_params.datapath = [globalDir,'California76/data/' setuptask '/california76/AllGestures_norm/'];
         data_params.transpath = [globalDir,'California76/data/' setuptask '/transcriptions_final/'];
-        data_params.trainfilename_str=(fullfile(globalDir,'Experiments', setuptask,'unBalanced/GestureRecognition',setupname,...
-                ['%s_Out'],['itr_1'],'Train.txt'));
-        data_params.testfilename_str=(fullfile(globalDir,'Experiments', setuptask,'unBalanced/GestureRecognition',setupname,...
-                ['%s_Out'],['itr_1'],'Test.txt'));
+        data_params.trainfilename_str=(fullfile(globalDir,'California76/Experiments', setuptask,'unBalanced/GestureRecognition',setupname,...
+                ['%d_Out'],['itr_1'],'Train.txt'));
+        data_params.testfilename_str=(fullfile(globalDir,'California76/Experiments', setuptask,'unBalanced/GestureRecognition',setupname,...
+                ['%d_Out'],['itr_1'],'Test.txt'));
     else
         data_params.datapath = [globalDir, setuptask];
         data_params.transpath =  [globalDir, setuptask];
         data_params.trainfilename_str=(fullfile(globalDir, setuptask,'Experiments',...
-                'Split_%s','Train.txt'));
+                'Split_%d','train.txt'));
         data_params.testfilename_str=(fullfile(globalDir, setuptask,'Experiments',...
-                'Split_%s','Test.txt'));
+                'Split_%d','test.txt'));
     end
 
 
@@ -50,7 +54,7 @@ function data_params = get_dataset_params(task_index, setup_index, conf)
     fprintf(conf.dict_type)
     % first create result_dir
     if task_index <=3
-        result_dir = fullfile(globalDir,'Experiments', setuptask,'unBalanced/GestureRecognition',setupname);
+        result_dir = fullfile(globalDir,'California76/Experiments', setuptask,'unBalanced/GestureRecognition',setupname);
     else 
         result_dir = fullfile(globalDir, setuptask, 'Experiments')
     end

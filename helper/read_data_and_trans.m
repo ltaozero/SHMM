@@ -1,5 +1,5 @@
 function [data, trans] = read_data_and_trans(data_filename, trans_filename, data_index) 
-    [pathstr,name,ext] = fileparts(data_filename)
+    [pathstr,name,ext] = fileparts(data_filename);
     if strcmp(ext,'.txt')
         fid=fopen(trans_filename);
         a=fscanf(fid,'%d %d G%d',[3,inf]);
@@ -11,7 +11,8 @@ function [data, trans] = read_data_and_trans(data_filename, trans_filename, data
         data = temp(1:length(trans),data_index);
     else if strcmp(ext, '.mat')
         load(data_filename,'A', 'Y');
-        data = A;
+        data = double(A);
         trans = Y;
+        trans(trans==0) = 18; 
     end
 end
