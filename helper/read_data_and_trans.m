@@ -15,4 +15,5 @@ function [data, trans] = read_data_and_trans(data_filename, trans_filename, data
         trans = Y;
         trans(trans==0) = 18; 
     end
+    trans = trans(:)';
 end

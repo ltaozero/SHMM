@@ -1,4 +1,4 @@
-function [predicted_labels, rate, ratebasic] = SHMM_test(testfilename, conf, model, result_filename,split)
+function [predicted_labels, rate, ratebasic] = SHMM_test(testfilename, conf, model, split)
 % ********************************************************
 % Input:
 %

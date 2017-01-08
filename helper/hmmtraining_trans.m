@@ -7,14 +7,7 @@ end
 
 Trans = cell(1, length(trans_filenames));
 for i = 1 : length(trans_filenames)
-    
-    fid=fopen(trans_filenames{i});
-    a=fscanf(fid,'%d %d G%d',[3,inf]);
-    trans=zeros(1,a(2,end));
-    for j=1:length(a)
-        trans(a(1,j):a(2,j))=a(3,j);
-    end
-    fclose(fid);
+    trans = read_trans(trans_filenames{i}); 
     Trans{i} = trans;
 end
 
